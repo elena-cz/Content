@@ -2,23 +2,22 @@ const express = require('express');
 require('dotenv').config();
 require('../database/bookshelf');
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes } = require('../database/helpers/getUserFeed');
-// const Post = require('../database/models/posts');
 // const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
-
 
 const app = express();
 
-app.get('/', (req, res) => {
 
-  res.send('Post(al) Service');
+// *** API Endpoints *** //
+
+app.get('/', (req, res) => {
+  res.send('Post Service');
 });
 
-// Get feed for user ID, starting at index in feed array
+// Load posts for user ID, starting at index in feed array
 app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
   getUserFeed(req.params.user_id, req.params.next_post_index)
     .then(results => res.send(results));
 });
-
 
 
 // *** Testing routes *** //
@@ -71,4 +70,4 @@ app.get('/testing/user_feed', (req, res) => {
 // });
 
 
-app.listen(8080, () => console.log('Lstening on port 8080'));
+app.listen(8080, () => console.log('Listening on port 8080'));

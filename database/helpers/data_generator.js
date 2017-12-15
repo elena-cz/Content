@@ -2,6 +2,7 @@ const faker = require('faker');
 const { knex } = require('../bookshelf');
 
 
+// Generate data for Posts table
 const generatePosts = () => {
   const posts = [];
 
@@ -22,7 +23,7 @@ const generatePosts = () => {
     .catch(error => console.log('error!', error));
 };
 
-
+// Generate data for both Feeds table and Friend_Likes table
 const generateFeeds = (startUserId = 0) => {
   const startTime = Date.now();
   let userId = startUserId * 1;
@@ -30,15 +31,15 @@ const generateFeeds = (startUserId = 0) => {
   const postFeeds = [];
   const friendLikes = [];
 
-  // For each user, create their post feed
+  // For each user, create their posts feed
   for (let k = 0; k < 500; k++) {
     userId += 1;
     const feed = [];
     const feedLength = faker.random.number({ min: 100, max: 200 });
 
+    // Generate postID that is among the most recent 1 million posts
+    // Older posts are toward the beginning of array (sorted)
     for (let i = 0; i < feedLength; i += 1) {
-      // Generate postID that is among the most recent 1 million posts
-      // Older posts are toward the beginning of array (sorted)
       const increment = 1000000 / feedLength;
       const postId = faker.random.number({ min: (i * increment) + 1, max: (i + 1) * increment }) + 9000000;
 
@@ -60,26 +61,25 @@ const generateFeeds = (startUserId = 0) => {
         friend_likes: JSON.stringify(friends),
       });
     }
-
+    // Add object for row in Feed table
     postFeeds.push({ user_id: userId, post_feed: JSON.stringify(feed) });
   }
   const generationTime = Date.now() - startTime;
   console.log(`Finished generating data in ${generationTime} milliseconds`);
 
-  // Save to database
+  // Save to Feeds and Friend_Likes tables
   knex.batchInsert('feeds', postFeeds, 1000)
     .then(() => knex.batchInsert('friend_likes', friendLikes, 1000))
     .then(() => {
       console.log(`Finished saving data in ${Date.now() - generationTime} milliseconds`);
       console.log('userId', userId);
+      // Continously add data until userId reaches set limit
       // if (userId < 49501) {
       //   return generateFeeds(userId);
       // }
     })
     .catch(error => console.log('error!', error));
 };
-
-
 
 
 module.exports.generatePosts = generatePosts;
