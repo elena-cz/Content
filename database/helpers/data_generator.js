@@ -2,7 +2,7 @@ const faker = require('faker');
 const { knex } = require('../bookshelf');
 
 
-const createPosts = () => {
+const generatePosts = () => {
   const posts = [];
 
   for (let i = 0; i < 10000; i += 1) {
@@ -23,7 +23,7 @@ const createPosts = () => {
 };
 
 
-const createFeeds = (startUserId = 0) => {
+const generateFeeds = (startUserId = 0) => {
   const startTime = Date.now();
   let userId = startUserId * 1;
 
@@ -73,16 +73,15 @@ const createFeeds = (startUserId = 0) => {
       console.log(`Finished saving data in ${Date.now() - generationTime} milliseconds`);
       console.log('userId', userId);
       // if (userId < 49501) {
-      //   return createFeeds(userId);
+      //   return generateFeeds(userId);
       // }
     })
     .catch(error => console.log('error!', error));
 };
 
 
-  // return { postFeed: postFeeds[0], friendLikes: friendLikes[0] };
 
 
-module.exports.createPosts = createPosts;
-module.exports.createFeeds = createFeeds;
+module.exports.generatePosts = generatePosts;
+module.exports.generateFeeds = generateFeeds;
 
