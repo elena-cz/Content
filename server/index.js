@@ -12,9 +12,17 @@ app.get('/', (req, res) => {
 
 // createPosts();
 
+  // createFeeds();
 
-  res.send(createFeeds());
+
+  res.send('generating feeds');
 });
+
+// Create new feeds for userID starting at ':start'
+// app.get('/feeds/:start', (req, res) => {
+//   createFeeds(req.params.start);
+//   res.send(req.params.start);
+// });
 
 
 app.listen(8080, () => console.log('Lstening on port 8080'));

@@ -5,7 +5,7 @@ const { knex } = require('../bookshelf');
 const createPosts = () => {
   const posts = [];
 
-  for (let i = 0; i < 10000; i++) {
+  for (let i = 0; i < 10000; i += 1) {
     const post = {
       user_id: faker.random.number({ min: 1, max: 100000 }),
       username: faker.internet.userName(),
@@ -23,15 +23,18 @@ const createPosts = () => {
 };
 
 
-const createFeeds = () => {
+const createFeeds = (startUserId = 0) => {
   const startTime = Date.now();
+  let userId = startUserId * 1;
 
   const postFeeds = [];
   const friendLikes = [];
 
-  for (let userId = 1; userId < 101; userId += 1) {
+  // For each user, create their post feed
+  for (let k = 0; k < 500; k++) {
+    userId += 1;
     const feed = [];
-    const feedLength = faker.random.number({ min: 500, max: 3500 });
+    const feedLength = faker.random.number({ min: 100, max: 200 });
 
     for (let i = 0; i < feedLength; i += 1) {
       // Generate postID that is among the most recent 1 million posts
@@ -54,34 +57,32 @@ const createFeeds = () => {
       friendLikes.push({
         user_id: userId,
         post_id: postId,
-        friend_likes: friends,
+        friend_likes: JSON.stringify(friends),
       });
     }
 
-    postFeeds.push({ user_id: userId, posts_feed: feed });
-
+    postFeeds.push({ user_id: userId, post_feed: JSON.stringify(feed) });
   }
-  console.log(`Finished in ${Date.now() - startTime} milliseconds`);
-  return { postFeed: postFeeds[0], friendLikes: friendLikes[0] };
+  const generationTime = Date.now() - startTime;
+  console.log(`Finished generating data in ${generationTime} milliseconds`);
 
+  // Save to database
+  knex.batchInsert('feeds', postFeeds, 1000)
+    .then(() => knex.batchInsert('friend_likes', friendLikes, 1000))
+    .then(() => {
+      console.log(`Finished saving data in ${Date.now() - generationTime} milliseconds`);
+      console.log('userId', userId);
+      // if (userId < 49501) {
+      //   return createFeeds(userId);
+      // }
+    })
+    .catch(error => console.log('error!', error));
 };
+
+
+  // return { postFeed: postFeeds[0], friendLikes: friendLikes[0] };
 
 
 module.exports.createPosts = createPosts;
 module.exports.createFeeds = createFeeds;
 
-
-//   new Post({
-//     user_id: 1,
-//     username: 'FredZ',
-//     profile_img_url: 'https://storage.model-ig.com/93838djjj39303jdj',
-//     img_url: 'https://storage.model-ig.com/03839jdjje88ud',
-//     caption: 'HRSF83 is easily the most talented cohort we\'ve ever had',
-//     location: 'San Francisco, CA',
-//     like_count: 92,
-//   }).save()
-//     .then((saved) => {
-//       console.log('saved:', saved);
-//       res.send(saved);
-//     })
-//     .catch(error => console.log('error!', error
