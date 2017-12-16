@@ -1,3 +1,8 @@
+const apm = require('elastic-apm-node').start({
+  appName: 'ig-posts',
+  serverUrl: 'http://localhost:8200',
+});
+
 const express = require('express');
 require('dotenv').config();
 require('../database/bookshelf');
@@ -24,36 +29,31 @@ app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
 
 // Get slice of feed
 app.get('/testing/feed_slice', (req, res) => {
-  const startTime = Date.now();
   getFeedSlice('7890', '124')
-    .then(results => res.send(results))
-    .then(() => console.log(`Feed slice in ${(Date.now() - startTime) / 1000} seconds`));
+    .then(results => res.send(results));
 });
 
 // Get post info for array of 10 post IDs
 app.get('/testing/post_info', (req, res) => {
-  const startTime = Date.now();
   getPostInfo([9921405, 9915528, 9903279, 9902614, 9889263, 9881134, 9876888, 9867126, 9865648, 9852171])
-    .then(results => res.send(results))
-    .then(() => console.log(`Post info in ${(Date.now() - startTime) / 1000} seconds`));
+    .then(results => res.send(results));
 });
 
 // Get friend_likes for array of 10 post IDs
 app.get('/testing/friend_likes', (req, res) => {
-  const startTime = Date.now();
   getFriendLikes('7890', [9921405, 9915528, 9903279, 9902614, 9889263, 9881134, 9876888, 9867126, 9865648, 9852171])
-    .then(results => res.send(results))
-    .then(() => console.log(`Friend likes in ${(Date.now() - startTime) / 1000} seconds`));
+    .then(results => res.send(results));
 });
 
 // Get a user's most recent 10 posts
 app.get('/testing/user_feed', (req, res) => {
-  const startTime = Date.now();
   getUserFeed('7890', '0')
-    .then(results => res.send(results))
-    .then(() => console.log(`User feed in ${(Date.now() - startTime) / 1000} seconds`));
+    .then(results => res.send(results));
 });
 
+// For console logging times (can delete if not needed)
+// const startTime = Date.now();
+// .then(() => console.log(`Feed slice in ${(Date.now() - startTime) / 1000} seconds`));
 
 // *** Data generation routes *** //
 
