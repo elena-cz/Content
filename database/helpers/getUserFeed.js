@@ -37,6 +37,21 @@ const getFriendLikes = (userId, postIds) => (
 );
 
 
+// For testing - can delete 
+const getFriendLikesById = feedLikesIds => (
+  new Promise((resolve) => {
+    knex('friend_likes').whereIn('id', feedLikesIds)
+      .then((results) => {
+        const friendLikes = {};
+        results.forEach((feedItem) => {
+          friendLikes[feedItem.post_id] = feedItem.friend_likes;
+        });
+        resolve(friendLikes);
+      });
+  })
+);
+
+
 const getUserFeed = (userId, startIndex) => (
   new Promise((resolve) => {
     getFeedSlice(userId, startIndex)
@@ -60,3 +75,4 @@ module.exports.getUserFeed = getUserFeed;
 module.exports.getFeedSlice = getFeedSlice;
 module.exports.getPostInfo = getPostInfo;
 module.exports.getFriendLikes = getFriendLikes;
+module.exports.getFriendLikesById = getFriendLikesById;

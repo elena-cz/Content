@@ -2,9 +2,9 @@ config:
   target: "http://127.0.0.1:8080"
   phases:
     - duration: 5
-      arrivalRate: 5000
+      arrivalRate: 1000
 scenarios:
   - flow:
-      # - log: "Load feed_slice"
+      # - log: "Load friend_likes"
       - get:
-          url: "/testing/feed_slice"
+          url: "/testing/friend_likes_byId"

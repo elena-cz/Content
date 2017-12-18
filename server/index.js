@@ -6,7 +6,7 @@ const apm = require('elastic-apm-node').start({
 const express = require('express');
 require('dotenv').config();
 require('../database/bookshelf');
-const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes } = require('../database/helpers/getUserFeed');
+const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
 // const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
 
 const app = express();
@@ -27,6 +27,8 @@ app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
 
 // *** Testing routes *** //
 
+// LOAD USER FEED
+
 // Get slice of feed
 app.get('/testing/feed_slice', (req, res) => {
   getFeedSlice('7890', '124')
@@ -45,11 +47,27 @@ app.get('/testing/friend_likes', (req, res) => {
     .then(results => res.send(results));
 });
 
+// Get friend_likes for array of 10 items
+app.get('/testing/friend_likes_byId', (req, res) => {
+  getFriendLikesById([1183638, 1183639, 1183640, 1183641, 1183642, 1183643, 1183644, 1183645, 1183646, 1183647])
+    .then(results => res.send(results));
+});
+
 // Get a user's most recent 10 posts
 app.get('/testing/user_feed', (req, res) => {
   getUserFeed('7890', '0')
     .then(results => res.send(results));
 });
+
+// SAVE POST LIKE
+
+// Increment like count for post
+app.post('/testing/increment_like_count/', (req, res) => {
+  getUserFeed('7890', '0')
+    .then(results => res.send(results));
+});
+
+
 
 // For console logging times (can delete if not needed)
 // const startTime = Date.now();
