@@ -25,6 +25,18 @@ app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
     .then(results => res.send(results));
 });
 
+// Save new like on post
+app.post('/likes/posts/:post_id/users/:user_id', (req, res) => {
+  // postId = 9999977
+  // liker userId=10641997, username=Rosemarie2
+  saveLike(req.params.post_id, req.params.user_id)
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
+
 
 // *** Testing routes *** //
 

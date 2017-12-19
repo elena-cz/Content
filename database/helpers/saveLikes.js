@@ -2,10 +2,15 @@ const Promise = require('bluebird');
 const { knex } = require('../bookshelf');
 const axios = require('axios');
 
-// Incremement like count for postId
-// Get list of users who follow both users
-// For each follower find the row in friend_likes where userId is follower
-// and add liker userId and username into front of friend likes array
+/**
+ * To save a new like on a post:
+ * 
+ * Incremement like count for postId
+ * Get list of users who follow both users
+ * For each follower find the row in friend_likes where userId is follower
+ * and add liker userId and username into front of friend likes array
+ **/
+
 
 const incrementLikeCount = postId => (
   new Promise((resolve, reject) => {
@@ -28,15 +33,15 @@ const getFollowers = (posterUserId, likerUserId) => {
 
 // Delete after integration
   return Promise.resolve({
-    userId: '10641997',
-    username: 'Rosemarie2',
+    userId: '10641920',
+    username: 'Elena',
     followers: [44750, 42321, 30805, 28050, 24282, 20441, 9953, 9390, 6356, 5702],
   });
 };
 
-const addFriendLike = (postId, { userId, username, followers }) => {
-  return Promise.map(followers, (followerId) => {
-    return knex('friend_likes')
+const addFriendLike = (postId, { userId, username, followers }) => (
+  Promise.map(followers, followerId => (
+    knex('friend_likes')
       .where({
         post_id: postId,
         user_id: followerId,
@@ -51,17 +56,16 @@ const addFriendLike = (postId, { userId, username, followers }) => {
             user_id: followerId,
           })
           .update('friend_likes', JSON.stringify(likes));
-      });
-  });
-};
+      })
+  ))
+);
 
 
-const saveLike = (postId, userId) => {
-  return incrementLikeCount(postId)
+const saveLike = (postId, userId) => (
+  incrementLikeCount(postId)
     .then(posterUserId => getFollowers(posterUserId, userId))
     .then(likeInfo => addFriendLike(postId, likeInfo))
-    .then(() => Promise.resolve());
-};
+);
 
 module.exports.saveLike = saveLike;
 module.exports.incrementLikeCount = incrementLikeCount;

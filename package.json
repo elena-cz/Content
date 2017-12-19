@@ -30,6 +30,8 @@
     "pg": "^7.4.0"
   },
   "devDependencies": {
-    "babel-preset-airbnb": "^2.4.0"
+    "babel-preset-airbnb": "^2.4.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
   }
 }
