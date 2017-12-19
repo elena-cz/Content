@@ -1,12 +1,13 @@
-const apm = require('elastic-apm-node').start({
-  appName: 'ig-posts',
-  serverUrl: 'http://localhost:8200',
-});
-
-const express = require('express');
 require('dotenv').config();
+require('newrelic');
+// const apm = require('elastic-apm-node').start({
+//   appName: 'ig-posts',
+//   serverUrl: 'http://localhost:8200',
+// });
+const express = require('express');
 require('../database/bookshelf');
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
+const { saveLike, incrementLikeCount, addFriendLike, getFollowers } = require('../database/helpers/saveLikes');
 // const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
 
 const app = express();
@@ -50,23 +51,71 @@ app.get('/testing/friend_likes', (req, res) => {
 // Get friend_likes for array of 10 items
 app.get('/testing/friend_likes_byId', (req, res) => {
   getFriendLikesById([1183638, 1183639, 1183640, 1183641, 1183642, 1183643, 1183644, 1183645, 1183646, 1183647])
-    .then(results => res.send(results));
+    .then(results => res.send(results))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
 });
 
 // Get a user's most recent 10 posts
 app.get('/testing/user_feed', (req, res) => {
   getUserFeed('7890', '0')
-    .then(results => res.send(results));
+    .then(results => res.send(results))
+    .catch(() => res.sendStatus(500));
 });
 
 // SAVE POST LIKE
 
 // Increment like count for post
-app.post('/testing/increment_like_count/', (req, res) => {
-  getUserFeed('7890', '0')
-    .then(results => res.send(results));
+app.get('/testing/increment_like_count/', (req, res) => {
+  incrementLikeCount('10641918')
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
 });
 
+// Get followers
+app.get('/testing/get_followers', (req, res) => {
+  getFollowers()
+    .then((results) => res.send(results))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
+
+// Fake like info
+const likeInfo = {
+  userId: '10641997',
+  username: 'Rosemarie2',
+  followers: [44750, 42321, 30805, 28050, 24282, 20441, 9953, 9390, 6356, 5702],
+};
+
+// Update friend_likes array for each follower
+app.get('/testing/add_friend_like/', (req, res) => {
+  addFriendLike('9999977', likeInfo)
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
+
+
+// Save new like on post
+app.get('/testing/save_post_like', (req, res) => {
+  // postId = 9999977
+  // liker userId=10641997, username=Rosemarie2
+  saveLike('9999977', '10641997')
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
 
 
 // For console logging times (can delete if not needed)

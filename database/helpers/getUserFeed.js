@@ -24,7 +24,7 @@ const getPostInfo = postIds => (
 );
 
 const getFriendLikes = (userId, postIds) => (
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     knex('friend_likes').whereIn('post_id', postIds).andWhere('user_id', userId)
       .then((results) => {
         const friendLikes = {};
@@ -32,12 +32,13 @@ const getFriendLikes = (userId, postIds) => (
           friendLikes[feedItem.post_id] = feedItem.friend_likes;
         });
         resolve(friendLikes);
-      });
+      })
+      .catch(error => reject(error));
   })
 );
 
 
-// For testing - can delete 
+// For testing - can delete
 const getFriendLikesById = feedLikesIds => (
   new Promise((resolve) => {
     knex('friend_likes').whereIn('id', feedLikesIds)
