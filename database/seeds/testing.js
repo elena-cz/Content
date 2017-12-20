@@ -31,7 +31,7 @@ const users = {
 
 
 const generatePost = (postUserId) => ({
-  user_id: postUserId,
+  user_id: postUserId * 1,
   username: users[postUserId].username,
   profile_img_url: 'http://lorempixel.com/640/480',
   img_url: 'http://lorempixel.com/640/399',
@@ -45,8 +45,8 @@ const generatePost = (postUserId) => ({
 // the post creator and feed owner
 const generateFriendLikes = (feedUserId, postId) => {
   const row = {
-    user_id: feedUserId,
-    post_id: postId,
+    user_id: feedUserId * 1,
+    post_id: postId * 1,
     friend_likes: [],
   };
 
@@ -58,9 +58,12 @@ const generateFriendLikes = (feedUserId, postId) => {
         users[id].following.includes(postUserId) &&
         users[id].following.includes(feedUserId)
         ) {
-      row.friend_likes.push({ user_id: id, username: users[id].username })
+      row.friend_likes.push({ user_id: id, username: users[id].username });
     }
   }
+
+  row.friend_likes = JSON.stringify(row.friend_likes);
+
   return row;
 };
 
@@ -73,7 +76,7 @@ const generateSeedData = () => {
     { user_id: 1, post_feed: [] },
     { user_id: 2, post_feed: [] },
     { user_id: 3, post_feed: [] },
-    { user_id: 4, post_feed: [] }
+    { user_id: 4, post_feed: [] },
     ];
   seedData.friendLikes = [];
 
@@ -87,41 +90,28 @@ const generateSeedData = () => {
     // Add friend_likes row for each post added to feed
     const followers = users[postUserId].followers;
     followers.forEach(feedUserId => {
-      seedData.feeds[feedUserId -1].post_feed.push(postId);
+      seedData.feeds[feedUserId - 1].post_feed.push(postId);
       seedData.friendLikes.push(generateFriendLikes(feedUserId, postId))
     })
   }
+
+  seedData.feeds.forEach(feed => feed.post_feed = JSON.stringify(feed.post_feed));
+
   return seedData;
 };  
 
-console.log(JSON.stringify(generateSeedData().friendLikes, null, 3));
+exports.seed = (knex, Promise) => {
+  const { posts, feeds, friendLikes } = generateSeedData();
 
-// Add a raw query to reset sequence
-
-
-// exports.seed = function(knex, Promise) {
-//   // Deletes ALL existing entries
-//   return knex('table_name').del()
-//     .then(function () {
-//       // Inserts seed entries
-//       for (let i = 0; i < )
-
-
-//       return knex('table_name').insert([
-//         {id: 1, colName: 'rowValue1'},
-//         {id: 2, colName: 'rowValue2'},
-//         {id: 3, colName: 'rowValue3'}
-//       ]);
-//     });
-// };
-
-
-// {
-//       user_id: faker.random.number({ min: 1, max: 100000 }),
-//       username: faker.internet.userName(),
-//       profile_img_url: faker.image.imageUrl(),
-//       img_url: faker.image.imageUrl(),
-//       caption: faker.lorem.sentence(),
-//       location: faker.address.city(),
-//       like_count: faker.random.number({ min: 1, max: 200 }),
-//     };
+  return Promise.join(
+    knex('friend_likes').del()
+      .then(() => knex.raw('ALTER SEQUENCE friend_likes_id_seq RESTART')),
+    knex('posts').del()
+      .then(() => knex.raw('ALTER SEQUENCE posts_id_seq RESTART')),
+    knex('feeds').del()
+      .then(() => knex.raw('ALTER SEQUENCE feeds_id_seq RESTART')),
+    knex('posts').insert(posts),
+    knex('feeds').insert(feeds),
+    knex('friend_likes').insert(friendLikes)
+  );
+};
