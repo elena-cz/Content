@@ -103,15 +103,14 @@ const generateSeedData = () => {
 exports.seed = (knex, Promise) => {
   const { posts, feeds, friendLikes } = generateSeedData();
 
-  return Promise.join(
+  return Promise.resolve(
     knex('friend_likes').del()
-      .then(() => knex.raw('ALTER SEQUENCE friend_likes_id_seq RESTART')),
-    knex('posts').del()
-      .then(() => knex.raw('ALTER SEQUENCE posts_id_seq RESTART')),
-    knex('feeds').del()
-      .then(() => knex.raw('ALTER SEQUENCE feeds_id_seq RESTART')),
-    knex('posts').insert(posts),
-    knex('feeds').insert(feeds),
-    knex('friend_likes').insert(friendLikes)
-  );
+      .then(() => knex.raw('ALTER SEQUENCE friend_likes_id_seq RESTART'))
+      .then(() => knex('posts').del())
+      .then(() => knex.raw('ALTER SEQUENCE posts_id_seq RESTART'))
+      .then(() => knex('feeds').del())
+      .then(() => knex.raw('ALTER SEQUENCE feeds_id_seq RESTART'))
+      .then(() => knex('posts').insert(posts))
+      .then(() => knex('feeds').insert(feeds))
+      .then(() => knex('friend_likes').insert(friendLikes)));
 };

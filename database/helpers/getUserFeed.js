@@ -18,7 +18,11 @@ const getPostInfo = postIds => (
   new Promise((resolve) => {
     knex('posts').whereIn('id', postIds)
       .then((results) => {
-        resolve(results);
+        const feed = {};
+        results.forEach((post) => {
+          feed[post.id * 1] = post;
+        });
+        resolve(feed);
       });
   })
 );
@@ -45,7 +49,7 @@ const getFriendLikesById = feedLikesIds => (
       .then((results) => {
         const friendLikes = {};
         results.forEach((feedItem) => {
-          friendLikes[feedItem.post_id] = feedItem.friend_likes;
+          friendLikes[feedItem.post_id * 1] = feedItem.friend_likes;
         });
         resolve(friendLikes);
       });
@@ -57,15 +61,19 @@ const getUserFeed = (userId, startIndex) => (
   new Promise((resolve) => {
     getFeedSlice(userId, startIndex)
       .then(({ nextPostIndex, postIds }) => (
-        Promise.all([nextPostIndex, getPostInfo(postIds), getFriendLikes(userId, postIds)])
+        Promise.all([nextPostIndex, postIds, getPostInfo(postIds), getFriendLikes(userId, postIds)])
       ))
-      .then(([nextPostIndex, postResp, likesResp]) => {
+      .then(([nextPostIndex, postIds, postResp, likesResp]) => {
         const response = {
           user_id: userId * 1,
           next_post_index: nextPostIndex,
-          feed: postResp,
+          feed: [],
         };
-        response.feed.forEach(post => post.friend_likes = likesResp[post.id]);
+        response.feed = postIds.map((id) => {
+          const post = postResp[id];
+          post.friend_likes = likesResp[id];
+          return post;
+        });
         resolve(response);
       });
   })

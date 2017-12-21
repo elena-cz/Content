@@ -4,8 +4,9 @@
   "description": "Service handles storing and serving posts for educational model of Instagram",
   "main": "server/index.js",
   "scripts": {
+    "start": "nodemon server/index.js",
     "test": "NODE_ENV='test' PORT=3000 mocha --exit",
-    "start": "nodemon server/index.js"
+    "test_server": "NODE_ENV='test' PORT=3000 mocha"
   },
   "repository": {
     "type": "git",
