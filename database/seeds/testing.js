@@ -1,3 +1,8 @@
+// TEST DATABASE SEED 
+// Generate data for test database - 4 users with 10 posts each
+// Then delete any existing data and seed database
+ 
+
 const users = {
   1: {
     id: 1,

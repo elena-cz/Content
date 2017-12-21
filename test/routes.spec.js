@@ -2,7 +2,7 @@
 
 process.env.NODE_ENV = 'test';
 const Promise = require('bluebird');
-const { knex } = require('../database/bookshelf');
+const { knex } = require('../database/index');
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');

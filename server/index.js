@@ -1,18 +1,20 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 require('dotenv').config();
+
 require('newrelic');
 // const apm = require('elastic-apm-node').start({
 //   appName: 'ig-posts',
 //   serverUrl: 'http://localhost:8200',
 // });
+
 const express = require('express');
-require('../database/bookshelf');
+require('../database/index');
+
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
 const { saveLike, incrementLikeCount, addFriendLike, getFollowers } = require('../database/helpers/saveLikes');
 // const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
 
 const port = process.env.PORT || 8080;
-
 const app = express();
 
 
@@ -30,8 +32,6 @@ app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
 
 // Save new like on post
 app.post('/likes/posts/:post_id/users/:user_id', (req, res) => {
-  // postId = 9999977
-  // liker userId=10641997, username=Rosemarie2
   saveLike(req.params.post_id, req.params.user_id)
     .then(() => res.sendStatus(200))
     .catch((error) => {

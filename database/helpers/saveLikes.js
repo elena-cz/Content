@@ -1,5 +1,5 @@
 const Promise = require('bluebird');
-const { knex } = require('../bookshelf');
+const { knex } = require('../index');
 const axios = require('axios');
 
 /**
