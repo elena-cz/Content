@@ -14,12 +14,22 @@ chai.use(chaiHttp);
 
 describe('API Routes', function () {
 
-  beforeEach(function(done) {
-     Promise.resolve(knex.seed.run())
+  before(function(done) {
+    knex.migrate.latest({ directory: 'database/migrations' })
+      .then(function() {
+        return knex.seed.run();
+      })
       .then(function() {
         done();
-      })
-  });
+    })
+  })
+
+  // beforeEach(function(done) {
+  //    Promise.resolve(knex.seed.run())
+  //     .then(function() {
+  //       done();
+  //     })
+  // });
 
   describe('Server is running', function () {
     it ('should return a response', function (done) {
