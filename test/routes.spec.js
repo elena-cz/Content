@@ -15,14 +15,14 @@ chai.use(chaiHttp);
 describe('API Routes', function () {
 
   before(function(done) {
-    knex.migrate.latest({ directory: 'database/migrations' })
+    Promise.resolve(knex.migrate.latest({ directory: 'database/migrations' })
       .then(function() {
         return knex.seed.run();
       })
       .then(function() {
         done();
-    })
-  })
+    }))
+  });
 
   // beforeEach(function(done) {
   //    Promise.resolve(knex.seed.run())
