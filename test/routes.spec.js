@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-process.env.NODE_ENV = 'test';
-const Promise = require('bluebird');
 const { knex } = require('../database/index');
 
 const chai = require('chai');
@@ -47,7 +45,6 @@ describe('API Routes', function () {
       chai.request(server)
         .get('/users/1/post_feed/0')
         .end(function(err, res) {
-          console.log('running first test in get user feed');
           expect(res).to.have.status(200);
           expect(res.body).to.have.property('user_id').eql(1);
           expect(res.body).to.have.property('next_post_index').eql(20);
