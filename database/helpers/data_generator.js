@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { knex } = require('../bookshelf');
+const { knex } = require('../index');
 
 
 // Generate data for Posts table

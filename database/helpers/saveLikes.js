@@ -1,10 +1,10 @@
 const Promise = require('bluebird');
-const { knex } = require('../bookshelf');
+const { knex } = require('../index');
 const axios = require('axios');
 
 /**
  * To save a new like on a post:
- * 
+ *
  * Incremement like count for postId
  * Get list of users who follow both users
  * For each follower find the row in friend_likes where userId is follower

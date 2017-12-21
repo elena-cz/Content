@@ -9,20 +9,23 @@ exports.up = function (knex, Promise) {
       table.text('caption');
       table.text('location');
       table.integer('like_count');
-      table.timestamps();
+      table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+      table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     }),
     knex.schema.createTable('feeds', (table) => {
       table.increments('id').primary();
       table.integer('user_id');
       table.jsonb('post_feed');
-      table.timestamps();
+      table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+      table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     }),
     knex.schema.createTable('friend_likes', (table) => {
       table.increments('id').primary();
       table.integer('user_id');
-      table.integer('post_id').references('posts.id');
+      table.integer('post_id');
       table.jsonb('friend_likes');
-      table.timestamps();
+      table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+      table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     }),
   ]);
 };
