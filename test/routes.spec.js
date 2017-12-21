@@ -14,12 +14,12 @@ chai.use(chaiHttp);
 
 describe('API Routes', function () {
 
-  // beforeEach(function(done) {
-  //    Promise.resolve(knex.seed.run())
-  //     .then(function() {
-  //       done();
-  //     })
-  // });
+  beforeEach(function(done) {
+     Promise.resolve(knex.seed.run())
+      .then(function() {
+        done();
+      })
+  });
 
   describe('Server is running', function () {
     it ('should return a response', function (done) {
@@ -32,18 +32,18 @@ describe('API Routes', function () {
     });
   });
 
-  // describe('Get user feed', function () {
-  //   it ('should return a response with user_id and next_post_index', function (done) {
-  //     chai.request(server)
-  //       .get('/users/1/post_feed/0')
-  //       .end(function(err, res) {
-  //         console.log('running first test in get user feed');
-  //         expect(res).to.have.status(200);
-  //         expect(res.body).to.have.property('user_id').eql(1);
-  //         expect(res.body).to.have.property('next_post_index').eql(20);
-  //         done();
-  //       });
-  //   });
+  describe('Get user feed', function () {
+    it ('should return a response with user_id and next_post_index', function (done) {
+      chai.request(server)
+        .get('/users/1/post_feed/0')
+        .end(function(err, res) {
+          console.log('running first test in get user feed');
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('user_id').eql(1);
+          expect(res.body).to.have.property('next_post_index').eql(20);
+          done();
+        });
+    });
 
 
   //   it ('should return 10 most recent posts, if starting index is 0', function (done) {
