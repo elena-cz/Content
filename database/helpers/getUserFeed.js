@@ -4,7 +4,7 @@ const { knex } = require('../bookshelf');
 
 const getFeedSlice = (userId, startIndex) => (
   new Promise((resolve) => {
-    knex('feeds').where('user_id', userId).select('post_feed')
+    knex('feeds').where('user_id', userId * 1).select('post_feed')
       .then((results) => {
         const feed = results[0].post_feed;
         const index = (startIndex !== '0') ? startIndex * 1 : feed.length;

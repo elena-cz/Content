@@ -1,3 +1,4 @@
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 require('dotenv').config();
 require('newrelic');
 // const apm = require('elastic-apm-node').start({
@@ -9,6 +10,8 @@ require('../database/bookshelf');
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
 const { saveLike, incrementLikeCount, addFriendLike, getFollowers } = require('../database/helpers/saveLikes');
 // const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
+
+const port = process.env.PORT || 8080;
 
 const app = express();
 
@@ -149,4 +152,6 @@ app.get('/testing/save_post_like', (req, res) => {
 // });
 
 
-app.listen(8080, () => console.log('Listening on port 8080'));
+const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = server;
