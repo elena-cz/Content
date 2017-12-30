@@ -1,5 +1,5 @@
 config:
-  target: "http://127.0.0.1:8080"
+  target: "http://127.0.0.1:3000"
   phases:
     - duration: 30
       arrivalRate: 10
@@ -13,6 +13,6 @@ config:
       name: "/ - 30s @ 500 rps"
 scenarios:
   - flow:
-      # - log: "Load post_info"
-      - get:
-          url: "/testing/post_info"
+      # - log: "Load feed_slice"
+      - post:
+          url: "/likes/posts/4/users/5"

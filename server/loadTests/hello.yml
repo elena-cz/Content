@@ -11,8 +11,10 @@ config:
     - duration: 30
       arrivalRate: 500
       name: "/ - 30s @ 500 rps"
+    - duration: 30
+      arrivalRate: 1000
+      name: "/ - 30s @ 1000 rps"
 scenarios:
   - flow:
-      # - log: "Load post_info"
       - get:
-          url: "/testing/post_info"
+          url: "/"

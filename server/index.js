@@ -1,7 +1,8 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 require('dotenv').config();
-
 require('newrelic');
+
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 // const apm = require('elastic-apm-node').start({
 //   appName: 'ig-posts',
 //   serverUrl: 'http://localhost:8200',

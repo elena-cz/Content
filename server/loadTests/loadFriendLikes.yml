@@ -1,8 +1,16 @@
 config:
   target: "http://127.0.0.1:8080"
   phases:
-    - duration: 5
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 50
+      name: "/ - Warm up to 50 rps"
+    - duration: 30
+      arrivalRate: 200
+      name: "/ - 30s @ 200 rps"
+    - duration: 30
       arrivalRate: 500
+      name: "/ - 30s @ 500 rps"
 scenarios:
   - flow:
       # - log: "Load friend_likes"
