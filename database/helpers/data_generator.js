@@ -3,10 +3,12 @@ const { knex } = require('../index');
 
 
 // Generate data for Posts table
-const generatePosts = () => {
+const generatePosts = (startCount = 0) => {
   const posts = [];
+  let count = startCount * 1;
 
   for (let i = 0; i < 10000; i += 1) {
+    count += 1;
     const post = {
       user_id: faker.random.number({ min: 1, max: 100000 }),
       username: faker.internet.userName(),
@@ -20,8 +22,17 @@ const generatePosts = () => {
   }
 
   knex.batchInsert('posts', posts, 1000)
+    .then(() => {
+      console.log('count', count);
+      // Continously add data until userId reaches set limit
+      if (count < (startCount * 1) + 100000) {
+        return generatePosts(count);
+      }
+      return Promise.resolve(count);
+    })
     .catch(error => console.log('error!', error));
 };
+
 
 // Generate data for both Feeds table and Friend_Likes table
 const generateFeeds = (startUserId = 0) => {
@@ -65,18 +76,19 @@ const generateFeeds = (startUserId = 0) => {
     postFeeds.push({ user_id: userId, post_feed: JSON.stringify(feed) });
   }
   const generationTime = Date.now() - startTime;
-  console.log(`Finished generating data in ${generationTime} milliseconds`);
+  // console.log(`Finished generating data in ${generationTime} milliseconds`);
 
   // Save to Feeds and Friend_Likes tables
   knex.batchInsert('feeds', postFeeds, 1000)
     .then(() => knex.batchInsert('friend_likes', friendLikes, 1000))
     .then(() => {
-      console.log(`Finished saving data in ${Date.now() - generationTime} milliseconds`);
+      // console.log(`Finished saving data in ${Date.now() - generationTime} milliseconds`);
       console.log('userId', userId);
       // Continously add data until userId reaches set limit
-      // if (userId < 49501) {
-      //   return generateFeeds(userId);
-      // }
+      if (userId < 50000) {
+        return generateFeeds(userId);
+      }
+      return Promise.resolve(userId);
     })
     .catch(error => console.log('error!', error));
 };

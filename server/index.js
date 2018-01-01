@@ -2,7 +2,7 @@ require('dotenv').config();
 // require('newrelic');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-console.log('Enivironment:', process.env.NODE_ENV);
+console.log('Environment:', process.env.NODE_ENV);
 
 // const apm = require('elastic-apm-node').start({
 //   appName: 'ig-posts',
@@ -10,11 +10,11 @@ console.log('Enivironment:', process.env.NODE_ENV);
 // });
 
 const express = require('express');
-// require('../database/index');
+require('../database/index');
 
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
 const { saveLike, incrementLikeCount, addFriendLike, getFollowers } = require('../database/helpers/saveLikes');
-// const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
+const { generatePosts, generateFeeds } = require('../database/helpers/data_generator');
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -142,16 +142,24 @@ app.get('/testing/save_post_like', (req, res) => {
 // *** Data generation routes *** //
 
 // Generate posts
-// app.get('/posts', (req, res) => {
-//   generatePosts();
-//   res.send('generating feeds');
-// });
+app.get('/generateposts/:start', (req, res) => {
+  generatePosts(req.params.start)
+    .then(count => res.send('Generated post count:', count))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
 
 // Generate new feeds for userID starting at ':start'
-// app.get('/feeds/:start', (req, res) => {
-//   generateFeeds(req.params.start);
-//   res.send(req.params.start);
-// });
+app.get('/feeds/:start', (req, res) => {
+  generateFeeds(req.params.start);
+    .then(userId => res.send('Generated feeds for User ID:', userId))
+    .catch((error) => {
+      console.log('error:', error);
+      res.sendStatus(500);
+    });
+});
 
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
