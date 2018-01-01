@@ -1,7 +1,8 @@
 require('dotenv').config();
-require('newrelic');
+// require('newrelic');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+console.log('Enivironment:', process.env.NODE_ENV);
 
 // const apm = require('elastic-apm-node').start({
 //   appName: 'ig-posts',
@@ -9,7 +10,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 // });
 
 const express = require('express');
-require('../database/index');
+// require('../database/index');
 
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
 const { saveLike, incrementLikeCount, addFriendLike, getFollowers } = require('../database/helpers/saveLikes');
@@ -22,7 +23,7 @@ const app = express();
 // *** API Endpoints *** //
 
 app.get('/', (req, res) => {
-  res.send('Post Service');
+  res.send('Post Service is now dockerized');
 });
 
 // Load posts for user ID, starting at index in feed array

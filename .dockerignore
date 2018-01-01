@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+
+server/loadTests/ig-posts-loadTestResults
+
+
+config.js
+.env
