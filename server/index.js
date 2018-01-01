@@ -143,22 +143,14 @@ app.get('/testing/save_post_like', (req, res) => {
 
 // Generate posts
 app.get('/generateposts/:start', (req, res) => {
-  generatePosts(req.params.start)
-    .then(count => res.send('Generated post count:', count))
-    .catch((error) => {
-      console.log('error:', error);
-      res.sendStatus(500);
-    });
+  generatePosts(req.params.start);
+  res.send('Generating posts');
 });
 
 // Generate new feeds for userID starting at ':start'
-app.get('/feeds/:start', (req, res) => {
+app.get('/generatefeeds/:start', (req, res) => {
   generateFeeds(req.params.start);
-    .then(userId => res.send('Generated feeds for User ID:', userId))
-    .catch((error) => {
-      console.log('error:', error);
-      res.sendStatus(500);
-    });
+  res.send('Generating feeds and friend likes');
 });
 
 

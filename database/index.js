@@ -1,3 +1,3 @@
-// const knex = require('knex')(require('./knexfile')[process.env.NODE_ENV]);
+const knex = require('knex')(require('./knexfile')[process.env.NODE_ENV]);
 
-// module.exports.knex = knex;
+module.exports.knex = knex;

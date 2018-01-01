@@ -28,7 +28,7 @@ const generatePosts = (startCount = 0) => {
       if (count < (startCount * 1) + 100000) {
         return generatePosts(count);
       }
-      return Promise.resolve(count);
+      console.log('Finished adding post count:', count);
     })
     .catch(error => console.log('error!', error));
 };
@@ -88,7 +88,7 @@ const generateFeeds = (startUserId = 0) => {
       if (userId < 50000) {
         return generateFeeds(userId);
       }
-      return Promise.resolve(userId);
+      console.log('Finished adding userId:', userId);
     })
     .catch(error => console.log('error!', error));
 };
