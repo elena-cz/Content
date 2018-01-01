@@ -32,7 +32,7 @@ app.get('/users/:user_id/post_feed/:next_post_index', (req, res) => {
 
 // Save new like on post
 app.post('/likes/posts/:post_id/users/:user_id', (req, res) => {
-  saveLike(req.params.post_id, req.params.user_id)
+  saveLike(req.params.post_id * 1, req.params.user_id * 1)
     .then(() => res.sendStatus(200))
     .catch((error) => {
       console.log('error:', error);

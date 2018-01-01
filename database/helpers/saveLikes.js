@@ -24,22 +24,42 @@ const incrementLikeCount = postId => (
 );
 
 
-const getFollowers = (posterUserId, likerUserId) => {
+const getFollowers = (postUserId, likeUserId) => {
   // Uncomment when getting ready to integrate
   // Add IP of People service after integration
   // Add code to extract username of liker and list of followers from results
-//   axios.get(`/users/${posterUserId}/${likerUserId}/followers`)
-//     .then((results) => console.log(results));
+  //   axios.get(`/users/${postUserId}/${likeUserId}/followers`)
+  //     .then((results) => console.log(results));
 
-// Delete after integration
-  return Promise.resolve({
-    userId: '10641920',
-    username: 'Elena',
-    followers: [44750, 42321, 30805, 28050, 24282, 20441, 9953, 9390, 6356, 5702],
-  });
+  // For testing without integration to People service
+  if (process.env.NODE_ENV === 'test') {
+    if (likeUserId === 5) {
+      return Promise.resolve({
+        user_id: likeUserId,
+        username: 'BB-8',
+        followers: [1, 2],
+      });
+    }
+
+    return Promise.resolve({
+      user_id: likeUserId,
+      username: 'Hux',
+      followers: [],
+    });
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    return Promise.resolve({
+      user_id: '10641920',
+      username: 'Elena',
+      followers: [44750, 42321, 30805, 28050, 24282, 20441, 9953, 9390, 6356, 5702],
+    });
+  }
+
+  return Promise.reject();
 };
 
-const addFriendLike = (postId, { userId, username, followers }) => (
+const addFriendLike = (postId, { user_id, username, followers }) => (
   Promise.map(followers, followerId => (
     knex('friend_likes')
       .where({
@@ -49,7 +69,7 @@ const addFriendLike = (postId, { userId, username, followers }) => (
       .select('friend_likes')
       .then((results) => {
         const likes = results[0].friend_likes;
-        likes.unshift({ userId, username });
+        likes.unshift({ user_id, username });
         return knex('friend_likes')
           .where({
             post_id: postId,
@@ -63,7 +83,7 @@ const addFriendLike = (postId, { userId, username, followers }) => (
 
 const saveLike = (postId, userId) => (
   incrementLikeCount(postId)
-    .then(posterUserId => getFollowers(posterUserId, userId))
+    .then(postUserId => getFollowers(postUserId, userId))
     .then(likeInfo => addFriendLike(postId, likeInfo))
 );
 

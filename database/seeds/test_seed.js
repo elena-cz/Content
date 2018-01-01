@@ -63,7 +63,7 @@ const generateFriendLikes = (feedUserId, postId) => {
         users[id].following.includes(postUserId) &&
         users[id].following.includes(feedUserId)
         ) {
-      row.friend_likes.push({ user_id: id, username: users[id].username });
+      row.friend_likes.push({ user_id: id * 1, username: users[id].username });
     }
   }
 
