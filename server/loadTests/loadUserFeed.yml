@@ -1,16 +1,22 @@
 config:
-  target: "http://127.0.0.1:8080"
+  target: "http://ig-posts-load-balancer-1976469884.us-west-2.elb.amazonaws.com"
   phases:
     - duration: 30
       arrivalRate: 10
       rampTo: 50
       name: "/ - Warm up to 50 rps"
+    # - duration: 30
+    #   arrivalRate: 200
+    #   name: "/ - 30s @ 200 rps"
+    # - duration: 30
+    #   arrivalRate: 500
+    #   name: "/ - 30s @ 500 rps"
+    # - duration: 30
+    #   arrivalRate: 800
+    #   name: "/ - 30s @ 800 rps"
     - duration: 30
-      arrivalRate: 200
-      name: "/ - 30s @ 200 rps"
-    - duration: 30
-      arrivalRate: 500
-      name: "/ - 30s @ 500 rps"
+      arrivalRate: 5000
+      name: "/ - 30s @ 2000 rps"
 scenarios:
   - flow:
       # - log: "Load user_feed"

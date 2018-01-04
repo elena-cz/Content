@@ -25,7 +25,7 @@ const generatePosts = (startCount = 0) => {
     .then(() => {
       console.log('count', count);
       // Continously add data until userId reaches set limit
-      if (count < (startCount * 1) + 100000) {
+      if (count < 10000000) {
         return generatePosts(count);
       }
       console.log('Finished adding post count:', count);

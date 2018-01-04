@@ -1,5 +1,5 @@
 config:
-  target: "http://127.0.0.1:8080"
+  target: "http://ig-posts-load-balancer-1976469884.us-west-2.elb.amazonaws.com"
   phases:
     - duration: 30
       arrivalRate: 10

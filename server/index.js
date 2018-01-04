@@ -1,5 +1,5 @@
 require('dotenv').config();
-// require('newrelic');
+require('newrelic');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 console.log('Environment:', process.env.NODE_ENV);
@@ -10,6 +10,7 @@ console.log('Environment:', process.env.NODE_ENV);
 // });
 
 const express = require('express');
+const path = require('path');
 require('../database/index');
 
 const { getUserFeed, getFeedSlice, getPostInfo, getFriendLikes, getFriendLikesById } = require('../database/helpers/getUserFeed');
@@ -23,7 +24,7 @@ const app = express();
 // *** API Endpoints *** //
 
 app.get('/', (req, res) => {
-  res.send('Post Service is now dockerized');
+  res.send('Post Service is ready for load testing');
 });
 
 // Load posts for user ID, starting at index in feed array
@@ -151,6 +152,13 @@ app.get('/generateposts/:start', (req, res) => {
 app.get('/generatefeeds/:start', (req, res) => {
   generateFeeds(req.params.start);
   res.send('Generating feeds and friend likes');
+});
+
+
+// *** Loader.io host verification *** //
+
+app.get('/loaderio-55f73d6a3f061b6599048123411bf42c/', (req, res) => {
+  res.sendFile('loaderio.txt', { root: __dirname });
 });
 
 
